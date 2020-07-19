@@ -45,9 +45,10 @@ The core strategy in 3D genome mapping is nuclear **proximity ligation** (Cullen
 ## Hi-C Data as a matrix
 
 .pull-left[
-- The genome (chromosome) is split into equally sized regions
-- Region size (resolution) is determined by sequencing depth
+- The genome (chromosome) is split into equally sized regions (resolution)
 - Data is represented by a symmetric matrix of contacts `\(C_{ij}\)` where entry `\(ij\)` corresponds to the number of times region `\(i\)` comes into contact with region `\(j\)`
+- Off-diagonal data view - increasing **distance** between interacting regions
+- Power-law decay of interaction frequencies with increasing **distance**
 ]
 
 .pull-right[
@@ -58,7 +59,7 @@ The core strategy in 3D genome mapping is nuclear **proximity ligation** (Cullen
 
 ## Biases in Hi-C data
 
-- Hi-C data suffers from many biases: sequence-dependent (e.g., mappability, CG content) &amp; technology-dependent (e.g., type of restriction enzyme, sequencing platform)
+- Hi-C data suffers from many biases: **sequence-dependent** (e.g., mappability, CG content) &amp; **technology-dependent** (e.g., type of restriction enzyme, sequencing platform)
 
 - Most normalization methods work on only an individual Hi-C dataset at a time
 
@@ -76,9 +77,9 @@ Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations f
 
 - Similar to the MA plot (Bland-Altman plot)
 
-- **M**ean interaction frequency = log2(IF2/IF1) on y - axis
+- Y-axis: **M**ean differences in interaction frequencies = log2(IF2/IF1)
 
-- Genomic **D**istance on x - axis
+- X-axis: Genomic **D**istance
 ]
 
 .pull-right[
@@ -94,18 +95,20 @@ Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations f
 
 ---
 
-## Cyclic loess normalization
+## Cyclic loess normalization of multiple Hi-C datasets
 
-We adapt cyclic loess as used on microarray data to Hi-C data (Ballman et al. 2004)
+Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repeat until convergence
 
 1. Choose two out of the N total samples then generate an MD plot
 2. Fit a loess curve f(d) to the MD plot
 3. Subtract f(d)/2 from the first dataset and add f(d)/2 to the second
 4. Repeat until all unique pairs have been compared
 5. Repeat until convergence
+
+.small[Ballman, Karla V., Diane E. Grill, Ann L. Oberg, and Terry M. Therneau. “[Faster Cyclic Loess: Normalizing RNA Arrays via Linear Models](https://doi.org/10.1093/bioinformatics/bth327).” Bioinformatics (Oxford, England) 20, no. 16 (November 1, 2004)]
 ---
 
-## Difference detection
+## Distance-centric chromatin interaction difference detection 
 
 .center[&lt;img src="img/multiHiCcompare_glm.png" width = 1100&gt;]
 
@@ -113,7 +116,7 @@ We adapt cyclic loess as used on microarray data to Hi-C data (Ballman et al. 20
 
 ---
 
-## Difference detection 
+## Distance-centric chromatin interaction difference detection 
 
 - **Exact test**
     - For comparing 2 groups without other covariates
@@ -123,8 +126,11 @@ We adapt cyclic loess as used on microarray data to Hi-C data (Ballman et al. 20
 
 - **GLM Methods**
     - For more complex experiments utilize the GLM framework
-    - Once we have an estimate of `\(\phi_{dg}\)`, the variance can be calculated for any `\(\mu_{dgj}\)`
     - The vector of covariates `\(x_i\)` can be linked with  `\(\mu_{dgj}\)` through a log-linear model `\(log(\mu_{dgj}) = x_i^T\beta_{dg} + log(M_{dj})\)`
+
+- Implemented in [edgeR](https://bioconductor.org/packages/edgeR/) R package
+
+&lt;!--    - Once we have an estimate of `\(\phi_{dg}\)`, the variance can be calculated for any `\(\mu_{dgj}\)` --&gt;
 ---
 
 ## Interpretation of differentially interacting chromatin regions (DIRs)
