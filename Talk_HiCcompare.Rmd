@@ -3,7 +3,7 @@ title: "Detection of Differentially Interacting Chromatin Regions From Multiple 
 subtitle: "HiCcompare and multiHiCcompare R/Bioconductor packages"
 author: "Mikhail Dozmorov"
 institute: "Virginia Commonwealth University"
-date: "`r Sys.Date()`"
+date: "2020-07-30"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -34,7 +34,7 @@ mono_light(
 - ~2 meters (~6ft) of DNA in one cell are packed into the $\sim10\mu m$ nucleus
 - ~500 times distance from Earth to Sun in all cells from human body
 
-.center[<img src="img/genome_folding.pngg" width = 700>]
+.center[<img src="img/genome_folding.png" width = 700>]
 ---
 
 ## Chromosome conformation capture technologies
