@@ -150,7 +150,7 @@ Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repe
 
 - **Overlap enrichment between TAD boundaries and DIRs.** DIRs may correspond to TAD boundaries that are deleted or created - test DIRs for significant overlap with TAD boundaries detected in either condition or only in boundaries changed between the conditions
 
-- **Overlap between DIRs and binding sites.** DIRs may correspond to locations where proteins bind with DNA, such as CTCF sites - еуые for overlap between binding site locations and DIRs.
+- **Overlap between DIRs and binding sites.** DIRs may correspond to locations where proteins bind with DNA, such as CTCF sites - test for overlap between binding site locations and DIRs.
 ---
 
 ## References
