@@ -4,7 +4,7 @@
 
 This workshop is based on [Stansfield et al., “R Tutorial: Detection of Differentially Interacting Chromatin Regions From Multiple Hi-C Datasets.”](https://currentprotocols.onlinelibrary.wiley.com/doi/abs/10.1002/cpbi.76). 
 
-- [Slides with a brief introduction for the workshop](https://github.com/mdozmorov/Talk_HiCcompare)
+- [Slides with a brief introduction for the workshop](https://mdozmorov.github.io/Talk_HiCcompare/)
 - [HiCcompareWorkshop GitHub repo](https://github.com/mdozmorov/HiCcompareWorkshop)
 - [HiCcompareWorkshop Docker image](https://hub.docker.com/repository/docker/mdozmorov/hiccompareworkshop)
 - [HiCcompareWorkshop pkgdown website](https://mdozmorov.github.io/HiCcompareWorkshop/)
