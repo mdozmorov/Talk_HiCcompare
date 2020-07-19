@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Detection of Differentially Interacting Chromatin Regions From Multiple Hi-C Datasets</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Mikhail Dozmorov" />
+    <meta name="date" content="2020-07-18" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="css/xaringan-my.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Detection of Differentially Interacting Chromatin Regions From Multiple Hi-C Datasets
+## HiCcompare and multiHiCcompare R/Bioconductor packages
+### Mikhail Dozmorov
+### Virginia Commonwealth University
+### 2020-07-18
+
+---
+
+
+
+
+
+## The 3D structure of the genome
+
+- Human genome is big - ~3.2 billion base pairs
+- ~2 meters (~6ft) of DNA in one cell are packed into the `\(\sim10\mu m\)` nucleus
+- ~500 times distance from Earth to Sun in all cells from human body
+
+.center[&lt;img src="img/genome_folding.pngg" width = 700&gt;]
+---
+
+## Chromosome conformation capture technologies
+
+The core strategy in 3D genome mapping is nuclear **proximity ligation** (Cullen et al., 1993), which allows detection of distant genomic segments residing in close spatial proximity to one another, yet are linearly far away.
+
+.center[&lt;img src="img/proximity_ligation.png" width = 650&gt;]
+
+.small[Lieberman-Aiden, Erez, Nynke L. van Berkum, Louise Williams, Maxim Imakaev, Tobias Ragoczy, Agnes Telling, Ido Amit, et al. “[Comprehensive Mapping of Long-Range Interactions Reveals Folding Principles of the Human Genome](https://doi.org/10.1126/science.1181369).” Science, 2009]
+---
+
+## Hi-C Data as a matrix
+
+.pull-left[
+- The genome (chromosome) is split into equally sized regions
+- Region size (resolution) is determined by sequencing depth
+- Data is represented by a symmetric matrix of contacts `\(C_{ij}\)` where entry `\(ij\)` corresponds to the number of times region `\(i\)` comes into contact with region `\(j\)`
+]
+
+.pull-right[
+&lt;img src="img/hicmatrix.png" width = 450&gt;
+]
+
+---
+
+## Biases in Hi-C data
+
+- Hi-C data suffers from many biases: sequence-dependent (e.g., mappability, CG content) &amp; technology-dependent (e.g., type of restriction enzyme, sequencing platform)
+
+- Most normalization methods work on only an individual Hi-C dataset at a time
+
+- Individual normalization methods do not perform well when goal is comparison
+
+.small[Lyu, Hongqiang, Erhu Liu, and Zhifang Wu. “[Comparison of Normalization Methods for Hi-C Data](https://europepmc.org/article/med/31588782).” BioTechniques 68, no. 2 (2020)
+
+Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations for Benchmarking Differential Chromatin Interaction Detection](https://doi.org/10.1016/j.ymeth.2020.07.001).” Methods, July 2020]
+---
+
+## Joint Normalization on the MD plot
+
+.pull-left[
+- **MD plot** represents data from two Hi-C matrices on one plot
+
+- Similar to the MA plot (Bland-Altman plot)
+
+- **M**ean interaction frequency = log2(IF2/IF1) on y - axis
+
+- Genomic **D**istance on x - axis
+]
+
+.pull-right[
+&lt;img src="img/mdplot.png" width = 400&gt;
+]
+---
+
+## Joint Loess Normalization of Hi-C Data
+
+.center[&lt;img src="img/normalization_loess.png" width = 580&gt;]
+
+.small[Benchmarking of multiHiCcompare and other normalization methods. Lyu, Hongqiang, Erhu Liu, and Zhifang Wu. “[Comparison of Normalization Methods for Hi-C Data](https://europepmc.org/article/med/31588782).” BioTechniques 68, no. 2 (2020)]
+
+---
+
+## Cyclic loess normalization
+
+We adapt cyclic loess as used on microarray data to Hi-C data (Ballman et al. 2004)
+
+1. Choose two out of the N total samples then generate an MD plot
+2. Fit a loess curve f(d) to the MD plot
+3. Subtract f(d)/2 from the first dataset and add f(d)/2 to the second
+4. Repeat until all unique pairs have been compared
+5. Repeat until convergence
+---
+
+## Difference detection
+
+.center[&lt;img src="img/multiHiCcompare_glm.png" width = 1100&gt;]
+
+.small[Evaluation of multiHiCcompare and other methods for differential detection. Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations for Benchmarking Differential Chromatin Interaction Detection](https://doi.org/10.1016/j.ymeth.2020.07.001).” Methods, July 2020]
+
+---
+
+## Difference detection 
+
+- **Exact test**
+    - For comparing 2 groups without other covariates
+    - Similar to Fisher's exact test
+    - Calculate quantile-adjusted conditional maximum likelihood (qCML)
+    - Compute exact p-values by summing over all sums of counts that have a probability less than the probability under the null hypothesis
+
+- **GLM Methods**
+    - For more complex experiments utilize the GLM framework
+    - Once we have an estimate of `\(\phi_{dg}\)`, the variance can be calculated for any `\(\mu_{dgj}\)`
+    - The vector of covariates `\(x_i\)` can be linked with  `\(\mu_{dgj}\)` through a log-linear model `\(log(\mu_{dgj}) = x_i^T\beta_{dg} + log(M_{dj})\)`
+---
+
+## Interpretation of differentially interacting chromatin regions (DIRs)
+
+- **Visualization of DIRs.** A Manhattan-like plot of DIRs may inform us about abnormalities or reveal chromosome site-specific enrichment of differentially interacting regions
+
+- **Overlap between differentially expressed genes and DIRs.** If gene expression measurements are available, differentially expressed genes may be tested for overlap with DIRs - test the link between DIRs and changed gene expression
+
+- **Functional enrichment of genes overlapping DIRs.** DIRs may disrupt specific pathways/functions - test whether genes overlapping DIRs are enriched in a canonical pathway or share a common function
+---
+
+## Interpretation of differentially interacting chromatin regions (DIRs)
+
+- **Overlap enrichment between TAD boundaries and DIRs.** DIRs may correspond to TAD boundaries that are deleted or created - test DIRs for significant overlap with TAD boundaries detected in either condition or only in boundaries changed between the conditions
+
+- **Overlap between DIRs and binding sites.** DIRs may correspond to locations where proteins bind with DNA, such as CTCF sites - еуые for overlap between binding site locations and DIRs.
+---
+
+## References
+
+- [HiCcompare](https://bioconductor.org/packages/HiCcompare/) - An R package for the joint normalization and differential analysis of chromatin interaction matrices obtained from Hi-C sequencing. https://bioconductor.org/packages/HiCcompare/
+    - Stansfield, John C., Kellen G. Cresswell, Vladimir I. Vladimirov, and Mikhail G. Dozmorov. “[HiCcompare: An R-Package for Joint Normalization and Comparison of HI-C Datasets](https://doi.org/10.1186/s12859-018-2288-x).” BMC Bioinformatics (December 2018)
+
+- [multiHiCcompare](https://bioconductor.org/packages/multiHiCcompare/) - An R package for the joint normalization of multiple Hi-C datasets and comparative analysis of complex Hi-C experiments. https://bioconductor.org/packages/multiHiCcompare/
+    - Stansfield, John C, Kellen G Cresswell, and Mikhail G Dozmorov. “[MultiHiCcompare: Joint Normalization and Comparative Analysis of Complex Hi-C Experiments](https://doi.org/10.1093/bioinformatics/btz048).” Bioinformatics, January 22, 2019
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+---
+title: "Detection of Differentially Interacting Chromatin Regions From Multiple Hi-C Datasets"
+subtitle: "HiCcompare and multiHiCcompare R/Bioconductor packages"
+author: "Mikhail Dozmorov"
+institute: "Virginia Commonwealth University"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["css/xaringan-themer.css", "css/xaringan-my.css"]
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color = "midnightblue",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "500", "500i"),
+  code_font_google   = google_font("Droid Mono"),
+  link_color = "#8B1A1A", #firebrick4, "deepskyblue1"
+  text_font_size = "28px"
+)
+```
+
+## The 3D structure of the genome
+
+- Human genome is big - ~3.2 billion base pairs
+- ~2 meters (~6ft) of DNA in one cell are packed into the $\sim10\mu m$ nucleus
+- ~500 times distance from Earth to Sun in all cells from human body
+
+.center[<img src="img/genome_folding.pngg" width = 700>]
+---
+
+## Chromosome conformation capture technologies
+
+The core strategy in 3D genome mapping is nuclear **proximity ligation** (Cullen et al., 1993), which allows detection of distant genomic segments residing in close spatial proximity to one another, yet are linearly far away.
+
+.center[<img src="img/proximity_ligation.png" width = 650>]
+
+.small[Lieberman-Aiden, Erez, Nynke L. van Berkum, Louise Williams, Maxim Imakaev, Tobias Ragoczy, Agnes Telling, Ido Amit, et al. “[Comprehensive Mapping of Long-Range Interactions Reveals Folding Principles of the Human Genome](https://doi.org/10.1126/science.1181369).” Science, 2009]
+---
+
+## Hi-C Data as a matrix
+
+.pull-left[
+- The genome (chromosome) is split into equally sized regions
+- Region size (resolution) is determined by sequencing depth
+- Data is represented by a symmetric matrix of contacts $C_{ij}$ where entry $ij$ corresponds to the number of times region $i$ comes into contact with region $j$
+]
+
+.pull-right[
+<img src="img/hicmatrix.png" width = 450>
+]
+
+---
+
+## Biases in Hi-C data
+
+- Hi-C data suffers from many biases: sequence-dependent (e.g., mappability, CG content) & technology-dependent (e.g., type of restriction enzyme, sequencing platform)
+
+- Most normalization methods work on only an individual Hi-C dataset at a time
+
+- Individual normalization methods do not perform well when goal is comparison
+
+.small[Lyu, Hongqiang, Erhu Liu, and Zhifang Wu. “[Comparison of Normalization Methods for Hi-C Data](https://europepmc.org/article/med/31588782).” BioTechniques 68, no. 2 (2020)
+
+Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations for Benchmarking Differential Chromatin Interaction Detection](https://doi.org/10.1016/j.ymeth.2020.07.001).” Methods, July 2020]
+---
+
+## Joint Normalization on the MD plot
+
+.pull-left[
+- **MD plot** represents data from two Hi-C matrices on one plot
+
+- Similar to the MA plot (Bland-Altman plot)
+
+- **M**ean interaction frequency = log2(IF2/IF1) on y - axis
+
+- Genomic **D**istance on x - axis
+]
+
+.pull-right[
+<img src="img/mdplot.png" width = 400>
+]
+---
+
+## Joint Loess Normalization of Hi-C Data
+
+.center[<img src="img/normalization_loess.png" width = 580>]
+
+.small[Benchmarking of multiHiCcompare and other normalization methods. Lyu, Hongqiang, Erhu Liu, and Zhifang Wu. “[Comparison of Normalization Methods for Hi-C Data](https://europepmc.org/article/med/31588782).” BioTechniques 68, no. 2 (2020)]
+
+---
+
+## Cyclic loess normalization
+
+We adapt cyclic loess as used on microarray data to Hi-C data (Ballman et al. 2004)
+
+1. Choose two out of the N total samples then generate an MD plot
+2. Fit a loess curve f(d) to the MD plot
+3. Subtract f(d)/2 from the first dataset and add f(d)/2 to the second
+4. Repeat until all unique pairs have been compared
+5. Repeat until convergence
+---
+
+## Difference detection
+
+.center[<img src="img/multiHiCcompare_glm.png" width = 1100>]
+
+.small[Evaluation of multiHiCcompare and other methods for differential detection. Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations for Benchmarking Differential Chromatin Interaction Detection](https://doi.org/10.1016/j.ymeth.2020.07.001).” Methods, July 2020]
+
+---
+
+## Difference detection 
+
+- **Exact test**
+    - For comparing 2 groups without other covariates
+    - Similar to Fisher's exact test
+    - Calculate quantile-adjusted conditional maximum likelihood (qCML)
+    - Compute exact p-values by summing over all sums of counts that have a probability less than the probability under the null hypothesis
+
+- **GLM Methods**
+    - For more complex experiments utilize the GLM framework
+    - Once we have an estimate of $\phi_{dg}$, the variance can be calculated for any $\mu_{dgj}$
+    - The vector of covariates $x_i$ can be linked with  $\mu_{dgj}$ through a log-linear model $log(\mu_{dgj}) = x_i^T\beta_{dg} + log(M_{dj})$
+---
+
+## Interpretation of differentially interacting chromatin regions (DIRs)
+
+- **Visualization of DIRs.** A Manhattan-like plot of DIRs may inform us about abnormalities or reveal chromosome site-specific enrichment of differentially interacting regions
+
+- **Overlap between differentially expressed genes and DIRs.** If gene expression measurements are available, differentially expressed genes may be tested for overlap with DIRs - test the link between DIRs and changed gene expression
+
+- **Functional enrichment of genes overlapping DIRs.** DIRs may disrupt specific pathways/functions - test whether genes overlapping DIRs are enriched in a canonical pathway or share a common function
+---
+
+## Interpretation of differentially interacting chromatin regions (DIRs)
+
+- **Overlap enrichment between TAD boundaries and DIRs.** DIRs may correspond to TAD boundaries that are deleted or created - test DIRs for significant overlap with TAD boundaries detected in either condition or only in boundaries changed between the conditions
+
+- **Overlap between DIRs and binding sites.** DIRs may correspond to locations where proteins bind with DNA, such as CTCF sites - еуые for overlap between binding site locations and DIRs.
+---
+
+## References
+
+- [HiCcompare](https://bioconductor.org/packages/HiCcompare/) - An R package for the joint normalization and differential analysis of chromatin interaction matrices obtained from Hi-C sequencing. https://bioconductor.org/packages/HiCcompare/
+    - Stansfield, John C., Kellen G. Cresswell, Vladimir I. Vladimirov, and Mikhail G. Dozmorov. “[HiCcompare: An R-Package for Joint Normalization and Comparison of HI-C Datasets](https://doi.org/10.1186/s12859-018-2288-x).” BMC Bioinformatics (December 2018)
+
+- [multiHiCcompare](https://bioconductor.org/packages/multiHiCcompare/) - An R package for the joint normalization of multiple Hi-C datasets and comparative analysis of complex Hi-C experiments. https://bioconductor.org/packages/multiHiCcompare/
+    - Stansfield, John C, Kellen G Cresswell, and Mikhail G Dozmorov. “[MultiHiCcompare: Joint Normalization and Comparative Analysis of Complex Hi-C Experiments](https://doi.org/10.1093/bioinformatics/btz048).” Bioinformatics, January 22, 2019
+
