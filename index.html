@@ -4,7 +4,6 @@
     <title>Detection of Differentially Interacting Chromatin Regions From Multiple Hi-C Datasets</title>
     <meta charset="utf-8" />
     <meta name="author" content="Mikhail Dozmorov" />
-    <meta name="date" content="2020-07-30" />
     <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
     <link rel="stylesheet" href="css/xaringan-my.css" type="text/css" />
   </head>
@@ -13,14 +12,20 @@
 class: center, middle, inverse, title-slide
 
 # Detection of Differentially Interacting Chromatin Regions From Multiple Hi-C Datasets
-## HiCcompare and multiHiCcompare R/Bioconductor packages
+## #bioc2020 workshop introducing HiCcompare and multiHiCcompare R/Bioconductor packages
 ### Mikhail Dozmorov
 ### Virginia Commonwealth University
-### 2020-07-30
+### 2020-07-30, 10:00-10:55am ET
 
 ---
 
+layout: true
+  
+&lt;div class="my-footer"&gt;
+&lt;img src="img/logo_bioconductor.gif"&gt;
+&lt;/div&gt;
 
+---
 
 
 
@@ -39,16 +44,16 @@ The core strategy in 3D genome mapping is nuclear **proximity ligation** (Cullen
 
 .center[&lt;img src="img/proximity_ligation.png" width = 650&gt;]
 
-.small[Lieberman-Aiden, Erez, Nynke L. van Berkum, Louise Williams, Maxim Imakaev, Tobias Ragoczy, Agnes Telling, Ido Amit, et al. “[Comprehensive Mapping of Long-Range Interactions Reveals Folding Principles of the Human Genome](https://doi.org/10.1126/science.1181369).” Science, 2009]
+.my-right-footer[ .small[ Lieberman-Aiden, Erez, Nynke L. van Berkum, Louise Williams, Maxim Imakaev, Tobias Ragoczy, Agnes Telling, Ido Amit, et al. “[Comprehensive Mapping of Long-Range Interactions Reveals Folding Principles of the Human Genome](https://doi.org/10.1126/science.1181369).” Science, 2009 ] ]
 ---
 
 ## Hi-C Data as a matrix
 
 .pull-left[
-- The genome (chromosome) is split into equally sized regions (resolution)
+- The genome (chromosome) is split into equally sized regions
 - Data is represented by a symmetric matrix of contacts `\(C_{ij}\)` where entry `\(ij\)` corresponds to the number of times region `\(i\)` comes into contact with region `\(j\)`
 - Off-diagonal data view - increasing **distance** between interacting regions
-- Power-law decay of interaction frequencies with increasing **distance**
+- Power-law decay of interactions with increasing **distance**
 ]
 
 .pull-right[
@@ -91,7 +96,7 @@ Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations f
 
 .center[&lt;img src="img/normalization_loess.png" width = 580&gt;]
 
-.small[Benchmarking of multiHiCcompare and other normalization methods. Lyu, Hongqiang, Erhu Liu, and Zhifang Wu. “[Comparison of Normalization Methods for Hi-C Data](https://europepmc.org/article/med/31588782).” BioTechniques 68, no. 2 (2020)]
+.my-right-footer[ .small[Lyu, Hongqiang, Erhu Liu, and Zhifang Wu. “[Comparison of Normalization Methods for Hi-C Data](https://europepmc.org/article/med/31588782).” BioTechniques, 2020] ]
 
 ---
 
@@ -112,7 +117,7 @@ Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repe
 
 .center[&lt;img src="img/multiHiCcompare_glm.png" width = 1100&gt;]
 
-.small[Evaluation of multiHiCcompare and other methods for differential detection. Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations for Benchmarking Differential Chromatin Interaction Detection](https://doi.org/10.1016/j.ymeth.2020.07.001).” Methods, July 2020]
+.my-right-footer[ .small[Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations for Benchmarking Differential Chromatin Interaction Detection](https://doi.org/10.1016/j.ymeth.2020.07.001).” Methods, 2020] ]
 
 ---
 
@@ -121,8 +126,6 @@ Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repe
 - **Exact test**
     - For comparing 2 groups without other covariates
     - Similar to Fisher's exact test
-    - Calculate quantile-adjusted conditional maximum likelihood (qCML)
-    - Compute exact p-values by summing over all sums of counts that have a probability less than the probability under the null hypothesis
 
 - **GLM Methods**
     - For more complex experiments utilize the GLM framework
@@ -130,7 +133,6 @@ Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repe
 
 - Implemented in [edgeR](https://bioconductor.org/packages/edgeR/) R package
 
-&lt;!--    - Once we have an estimate of `\(\phi_{dg}\)`, the variance can be calculated for any `\(\mu_{dgj}\)` --&gt;
 ---
 
 ## Interpretation of differentially interacting chromatin regions (DIRs)
@@ -162,6 +164,7 @@ Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repe
 
 - Stansfield, John C, Kellen G Cresswell, and Mikhail G Dozmorov. “[MultiHiCcompare: Joint Normalization and Comparative Analysis of Complex Hi-C Experiments](https://doi.org/10.1093/bioinformatics/btz048).” Bioinformatics, January 22, 2019
 ]
+
 ---
 
 ## HiCcompareWorkshop resources
@@ -173,6 +176,10 @@ Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repe
 - Docker image: [https://hub.docker.com/repository/docker/mdozmorov/hiccompareworkshop](https://hub.docker.com/repository/docker/mdozmorov/hiccompareworkshop)
 
 - Pkgdown website: [https://mdozmorov.github.io/HiCcompareWorkshop/](https://mdozmorov.github.io/HiCcompareWorkshop/)
+
+.center[Get in touch on Twitter [@mikhaildozmorov](https://twitter.com/mikhaildozmorov) &lt;br&gt; or by e-mail `mdozmorov at vcu dot edu`]
+
+.small[ This research was supported by the American Cancer Society [IRG-14-192-40] and the National Institute of Environmental Health Sciences of the National Institutes of Health [T32ES007334] ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
