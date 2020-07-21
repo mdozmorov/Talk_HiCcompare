@@ -149,13 +149,30 @@ Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repe
 - **Overlap between DIRs and binding sites.** DIRs may correspond to locations where proteins bind with DNA, such as CTCF sites - test for overlap between binding site locations and DIRs.
 ---
 
-## References
+## Summary
 
-- [HiCcompare](https://bioconductor.org/packages/HiCcompare/) - An R package for the joint normalization and differential analysis of chromatin interaction matrices obtained from Hi-C sequencing. https://bioconductor.org/packages/HiCcompare/
-    - Stansfield, John C., Kellen G. Cresswell, Vladimir I. Vladimirov, and Mikhail G. Dozmorov. “[HiCcompare: An R-Package for Joint Normalization and Comparison of HI-C Datasets](https://doi.org/10.1186/s12859-018-2288-x).” BMC Bioinformatics (December 2018)
+- **Distance-centric view** of Hi-C data is critical (`MD plot`)
 
-- [multiHiCcompare](https://bioconductor.org/packages/multiHiCcompare/) - An R package for the joint normalization of multiple Hi-C datasets and comparative analysis of complex Hi-C experiments. https://bioconductor.org/packages/multiHiCcompare/
-    - Stansfield, John C, Kellen G Cresswell, and Mikhail G Dozmorov. “[MultiHiCcompare: Joint Normalization and Comparative Analysis of Complex Hi-C Experiments](https://doi.org/10.1093/bioinformatics/btz048).” Bioinformatics, January 22, 2019
+- **Joint loess normalization** effectively removes between-dataset biases (`HiCcompare`, https://bioconductor.org/packages/HiCcompare/)
+
+- **Differential analysis considering distance** has optimal performance (`multiHiCcompare`, https://bioconductor.org/packages/multiHiCcompare/)
+
+.small[
+- Stansfield, John C., Kellen G. Cresswell, Vladimir I. Vladimirov, and Mikhail G. Dozmorov. “[HiCcompare: An R-Package for Joint Normalization and Comparison of HI-C Datasets](https://doi.org/10.1186/s12859-018-2288-x).” BMC Bioinformatics (December 2018)
+
+- Stansfield, John C, Kellen G Cresswell, and Mikhail G Dozmorov. “[MultiHiCcompare: Joint Normalization and Comparative Analysis of Complex Hi-C Experiments](https://doi.org/10.1093/bioinformatics/btz048).” Bioinformatics, January 22, 2019
+]
+---
+
+## HiCcompareWorkshop resources
+
+- These slides: [https://mdozmorov.github.io/Talk_HiCcompare/index.html](https://mdozmorov.github.io/Talk_HiCcompare/index.html)
+
+- GitHub repo: [https://github.com/mdozmorov/HiCcompareWorkshop](https://github.com/mdozmorov/HiCcompareWorkshop)
+
+- Docker image: [https://hub.docker.com/repository/docker/mdozmorov/hiccompareworkshop](https://hub.docker.com/repository/docker/mdozmorov/hiccompareworkshop)
+
+- Pkgdown website: [https://mdozmorov.github.io/HiCcompareWorkshop/](https://mdozmorov.github.io/HiCcompareWorkshop/)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
