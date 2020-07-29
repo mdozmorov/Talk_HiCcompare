@@ -1,6 +1,6 @@
 ---
 title: "Detection of Differentially Interacting Chromatin Regions From Multiple Hi-C Datasets"
-subtitle: "#bioc2020 workshop introducing HiCcompare and multiHiCcompare R/Bioconductor packages"
+subtitle: "#bioc2020 workshop"
 author: "Mikhail Dozmorov"
 institute: "Virginia Commonwealth University"
 date: "2020-07-30, 10:00-10:55am ET"
@@ -14,13 +14,13 @@ output:
       highlightLines: true
       countIncrementalSlides: false
 ---
-layout: true
+<!-- layout: true
   
 <div class="my-footer">
 <img src="img/logo_bioconductor.gif">
 </div>
 
----
+--- -->
 
 ```{r xaringan-themer, include = FALSE}
 library(xaringanthemer)
@@ -33,6 +33,23 @@ mono_light(
   text_font_size = "28px"
 )
 ```
+
+## HiCcompareWorkshop resources
+
+- These slides: [https://mdozmorov.github.io/Talk_HiCcompare](https://mdozmorov.github.io/Talk_HiCcompare)
+
+- GitHub repo: [https://github.com/mdozmorov/HiCcompareWorkshop](https://github.com/mdozmorov/HiCcompareWorkshop)
+
+- Docker image: [https://hub.docker.com/repository/docker/mdozmorov/hiccompareworkshop](https://hub.docker.com/repository/docker/mdozmorov/hiccompareworkshop)
+
+- Pkgdown website: [https://mdozmorov.github.io/HiCcompareWorkshop/](https://mdozmorov.github.io/HiCcompareWorkshop/)
+
+- Start this workshop at [http://workshop.bioc.cancerdatasci.org/](http://workshop.bioc.cancerdatasci.org/)
+    - Username: rstudio
+    - Password: welcome-to-bioc2020
+    - `help(package = "HiCcompareWorkshop")`
+
+---
 
 ## The 3D structure of the genome
 
@@ -49,7 +66,7 @@ The core strategy in 3D genome mapping is nuclear **proximity ligation** (Cullen
 
 .center[<img src="img/proximity_ligation.png" width = 650>]
 
-.my-right-footer[ .small[ Lieberman-Aiden, Erez, Nynke L. van Berkum, Louise Williams, Maxim Imakaev, Tobias Ragoczy, Agnes Telling, Ido Amit, et al. “[Comprehensive Mapping of Long-Range Interactions Reveals Folding Principles of the Human Genome](https://doi.org/10.1126/science.1181369).” Science, 2009 ] ]
+.small[ Lieberman-Aiden, Erez, Nynke L. van Berkum, Louise Williams, Maxim Imakaev, Tobias Ragoczy, Agnes Telling, Ido Amit, et al. “[Comprehensive Mapping of Long-Range Interactions Reveals Folding Principles of the Human Genome](https://doi.org/10.1126/science.1181369).” Science, 2009 ]
 ---
 
 ## Hi-C Data as a matrix
@@ -101,7 +118,7 @@ Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations f
 
 .center[<img src="img/normalization_loess.png" width = 580>]
 
-.my-right-footer[ .small[Lyu, Hongqiang, Erhu Liu, and Zhifang Wu. “[Comparison of Normalization Methods for Hi-C Data](https://europepmc.org/article/med/31588782).” BioTechniques, 2020] ]
+.small[Lyu, Hongqiang, Erhu Liu, and Zhifang Wu. “[Comparison of Normalization Methods for Hi-C Data](https://europepmc.org/article/med/31588782).” BioTechniques, 2020]
 
 ---
 
@@ -122,7 +139,7 @@ Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repe
 
 .center[<img src="img/multiHiCcompare_glm.png" width = 1100>]
 
-.my-right-footer[ .small[Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations for Benchmarking Differential Chromatin Interaction Detection](https://doi.org/10.1016/j.ymeth.2020.07.001).” Methods, 2020] ]
+.small[Zheng, Ye, Peigen Zhou, and Sündüz Keleş. “[FreeHi-C Spike-in Simulations for Benchmarking Differential Chromatin Interaction Detection](https://doi.org/10.1016/j.ymeth.2020.07.001).” Methods, 2020]
 
 ---
 
@@ -174,7 +191,7 @@ Cyclic loess (Ballman et al. 2004) - take each pair of datasets, normalize, repe
 
 ## HiCcompareWorkshop resources
 
-- These slides: [https://mdozmorov.github.io/Talk_HiCcompare/index.html](https://mdozmorov.github.io/Talk_HiCcompare/index.html)
+- These slides: [https://mdozmorov.github.io/Talk_HiCcompare](https://mdozmorov.github.io/Talk_HiCcompare)
 
 - GitHub repo: [https://github.com/mdozmorov/HiCcompareWorkshop](https://github.com/mdozmorov/HiCcompareWorkshop)
 

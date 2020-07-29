@@ -9,6 +9,6 @@ div.my-footer {
 }
 .my-right-footer {
     position: absolute;
-    bottom: 0px;
-    left: 300px;
+    bottom: 10px;
+    left: 10px;
 }
